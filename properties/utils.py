@@ -19,14 +19,14 @@ def get_redis_cache_metrics():
         hits = info.get("keyspace_hits", 0)
         misses = info.get("keyspace_misses", 0)
 
-        # Calculate hit ratio safely
-        total = hits + misses
-        hit_ratio = (hits / total) if total > 0 else 0
+        # Calculate hit ratio using total_requests
+        total_requests = hits + misses
+        hit_ratio = (hits / total_requests) if total_requests > 0 else 0
 
-        # Log metrics for visibility
+        # Log metrics
         logger.info(f"Redis Cache Metrics → Hits: {hits}, Misses: {misses}, Hit Ratio: {hit_ratio:.2%}")
 
-        # Return structured metrics
+        # Return structured data
         return {
             "hits": hits,
             "misses": misses,
