@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_DB: propertydb
       POSTGRES_USER: property_user
-      POSTGRES_PASSWORD: your_secure_password
+      POSTGRES_PASSWORD: property_password
     ports:
       - "5432:5432"
     volumes:
