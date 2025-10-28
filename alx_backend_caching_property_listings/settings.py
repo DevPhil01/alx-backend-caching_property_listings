@@ -77,7 +77,7 @@ DATABASES = {
         'NAME': 'propertydb',            # matches POSTGRES_DB in docker-compose
         'USER': 'property_user',         # matches POSTGRES_USER
         'PASSWORD': 'property_password', # matches POSTGRES_PASSWORD
-        'HOST': 'db',                    # Docker service name
+        'HOST': 'localhost',                    # Docker service name
         'PORT': '5432',
     }
 }
