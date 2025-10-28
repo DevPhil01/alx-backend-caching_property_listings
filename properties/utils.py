@@ -1,25 +1,42 @@
-from django.core.cache import cache
-from .models import Property
+from django_redis import get_redis_connection
+import logging
 
-def get_all_properties():
+logger = logging.getLogger(__name__)
+
+def get_redis_cache_metrics():
     """
-    Fetch all properties from cache if available.
-    Otherwise, query the database and cache the results for 1 hour.
+    Retrieve and analyze Redis cache hit/miss metrics.
+    Returns a dictionary with hits, misses, and hit ratio.
     """
-    # Try to get cached data
-    properties = cache.get('all_properties')
+    try:
+        # Connect to Redis through django-redis
+        redis_conn = get_redis_connection("default")
 
-    if properties is not None:
-        print("Returning properties from cache...")
-        return properties
+        # Fetch Redis INFO stats
+        info = redis_conn.info()
 
-    # Not in cache: fetch from DB
-    print("Fetching properties from database...")
-    properties = list(Property.objects.all().values(
-        "id", "title", "description", "price", "location", "created_at"
-    ))
+        # Extract hits and misses
+        hits = info.get("keyspace_hits", 0)
+        misses = info.get("keyspace_misses", 0)
 
-    # Cache the data for 1 hour (3600 seconds)
-    cache.set('all_properties', properties, 3600)
+        # Calculate hit ratio safely
+        total = hits + misses
+        hit_ratio = (hits / total) if total > 0 else 0
 
-    return properties
+        # Log metrics for visibility
+        logger.info(f"Redis Cache Metrics → Hits: {hits}, Misses: {misses}, Hit Ratio: {hit_ratio:.2%}")
+
+        # Return structured metrics
+        return {
+            "hits": hits,
+            "misses": misses,
+            "hit_ratio": round(hit_ratio, 4)
+        }
+
+    except Exception as e:
+        logger.error(f"Error retrieving Redis metrics: {e}")
+        return {
+            "hits": 0,
+            "misses": 0,
+            "hit_ratio": 0.0
+        }
