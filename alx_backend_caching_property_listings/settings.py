@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'property_db',
         'USER': 'property_user',
-        'PASSWORD': 'property_pass',
+        'PASSWORD': 'property_password',
         'HOST': 'localhost',  # Use 'db' if Django runs inside Docker
         'PORT': '5432',
     }
