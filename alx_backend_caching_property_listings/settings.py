@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'properties',
     'django_redis',
-
 ]
 
 MIDDLEWARE = [
@@ -72,25 +70,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'alx_backend_caching_property_listings.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# Database configuration (PostgreSQL via Docker)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'property_db',
-        'USER': 'property_user',
-        'PASSWORD': 'property_password',
-        'HOST': 'localhost',  # Use 'db' if Django runs inside Docker
+        'NAME': 'propertydb',            # matches POSTGRES_DB in docker-compose
+        'USER': 'property_user',         # matches POSTGRES_USER
+        'PASSWORD': 'property_password', # matches POSTGRES_PASSWORD
+        'HOST': 'db',                    # Docker service name
         'PORT': '5432',
     }
 }
 
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -106,39 +99,32 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+# Redis cache configuration
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",  # Use "redis://redis:6379/1" if Django in Docker
+        "LOCATION": "redis://redis:6379/1",  # Docker service name 'redis'
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
 
-# Optional cache settings
+# Use Redis for session storage
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = 'static/'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
